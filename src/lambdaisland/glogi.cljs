@@ -19,22 +19,22 @@
 (defn- goog-setLevel [logger level]
   (if (exists? glog/setLevel)
     (^:cljs.analyzer/no-resolve glog/setLevel logger level)
-    (.setLevel logger level)))
+    (.setLevel ^glog/Logger logger level)))
 
 (defn- goog-logRecord [logger record]
   (if (exists? glog/publishLogRecord)
     (^:cljs.analyzer/no-resolve glog/publishLogRecord logger record)
-    (.logRecord logger record)))
+    (.logRecord ^glog/Logger logger record)))
 
 (defn- goog-addHandler [logger handler]
   (if (exists? glog/addHandler)
     (glog/addHandler logger handler)
-    (.addHandler logger handler)))
+    (.addHandler ^glog/Logger logger handler)))
 
 (defn- goog-removeHandler [logger handler]
   (if (exists? glog/removeHandler)
     (glog/removeHandler logger handler)
-    (.removeHandler logger handler)))
+    (.removeHandler ^glog/Logger logger handler)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -67,7 +67,7 @@
 
 (def root-logger (logger ""))
 
-(defn- predefined-level [name]
+(defn- predefined-level ^glog/Level [name]
   (when (exists? glog/Level)
     (glog/Level.getPredefinedLevel name)))
 
@@ -75,22 +75,22 @@
   ;; Hacky way to make this work across versions. (.-OFF Level) does not work in
   ;; the new version after advanced compilation, but they have added a lookup
   ;; function.
-  {:off     (or (.-OFF Level) (predefined-level "OFF"))
-   :shout   (or (.-SHOUT Level) (predefined-level "SHOUT"))
-   :severe  (or (.-SEVERE Level) (predefined-level "SEVERE"))
-   :warning (or (.-WARNING Level) (predefined-level "WARNING"))
-   :info    (or (.-INFO Level) (predefined-level "INFO"))
-   :config  (or (.-CONFIG Level) (predefined-level "CONFIG"))
-   :fine    (or (.-FINE Level) (predefined-level "FINE"))
-   :finer   (or (.-FINER Level) (predefined-level "FINER"))
-   :finest  (or (.-FINEST Level) (predefined-level "FINEST"))
-   :all     (or (.-ALL Level) (predefined-level "ALL"))
+  {:off     (or (.-OFF ^glog/Level Level) (predefined-level "OFF"))
+   :shout   (or (.-SHOUT ^glog/Level Level) (predefined-level "SHOUT"))
+   :severe  (or (.-SEVERE ^glog/Level Level) (predefined-level "SEVERE"))
+   :warning (or (.-WARNING ^glog/Level Level) (predefined-level "WARNING"))
+   :info    (or (.-INFO ^glog/Level Level) (predefined-level "INFO"))
+   :config  (or (.-CONFIG ^glog/Level Level) (predefined-level "CONFIG"))
+   :fine    (or (.-FINE ^glog/Level Level) (predefined-level "FINE"))
+   :finer   (or (.-FINER ^glog/Level Level) (predefined-level "FINER"))
+   :finest  (or (.-FINEST ^glog/Level Level) (predefined-level "FINEST"))
+   :all     (or (.-ALL ^glog/Level Level) (predefined-level "ALL"))
 
    ;; pedestal style
-   :trace (or (.-FINER Level) (predefined-level "FINER"))
-   :debug (or (.-FINE Level) (predefined-level "FINE"))
-   :warn  (or (.-WARNING Level) (predefined-level "WARNING"))
-   :error (or (.-SEVERE Level) (predefined-level "SEVERE"))})
+   :trace (or (.-FINER ^glog/Level Level) (predefined-level "FINER"))
+   :debug (or (.-FINE ^glog/Level Level) (predefined-level "FINE"))
+   :warn  (or (.-WARNING ^glog/Level Level) (predefined-level "WARNING"))
+   :error (or (.-SEVERE ^glog/Level Level) (predefined-level "SEVERE"))})
 
 (defn level [lvl]
   (get levels lvl))
@@ -150,7 +150,7 @@
   use [lambdaisland.glogi.console/install!] for a version that plays nicely with
   cljs-devtools."
   []
-  (when-let [instance Console/instance]
+  (when-let [^Console instance Console/instance]
     (.setCapturing instance true)
     (let [instance (Console.)]
       (set! Console/instance instance)
